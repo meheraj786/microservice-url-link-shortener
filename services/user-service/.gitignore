@@ -35,7 +35,6 @@ prisma/*.db-journal
 # Docker
 Dockerfile.dev
 
-
 # AI & Editor Skills / Metadata
 .agents/
 .claude/
