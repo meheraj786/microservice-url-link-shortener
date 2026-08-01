@@ -12,18 +12,21 @@
     "check": "biome check --write ."
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^6.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "ioredis": "^5.4.2",
-    "nanoid": "^5.1.0"
+    "nanoid": "^5.1.0",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
+    "@types/pg": "^8.20.3",
     "prisma": "^6.5.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
