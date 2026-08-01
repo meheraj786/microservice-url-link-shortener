@@ -1,0 +1,10 @@
+node_modules
+.pnpm-store
+dist
+build
+.env
+.git
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
