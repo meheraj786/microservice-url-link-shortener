@@ -1,3 +1,4 @@
+
 FROM node:20-alpine AS builder
 
 RUN npm install -g pnpm
@@ -10,11 +11,11 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
+ENV DATABASE_URL="postgresql://mockuser:mockpass@localhost:5432/mockdb" 
+
 RUN pnpm prisma generate
 
 RUN pnpm run build
-
-
 
 FROM node:20-alpine AS runner
 
