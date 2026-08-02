@@ -1,0 +1,57 @@
+name: Microservices CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  test_and_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10 
+
+      - name: Test & Build User Service
+        run: |
+          cd services/user-service
+          pnpm install --frozen-lockfile
+          export DATABASE_URL="postgresql://mockuser:mockpass@localhost:5432/mockdb"
+          pnpm prisma generate
+          pnpm run build
+
+      - name: Test & Build URL Service
+        run: |
+          cd services/url-service
+          pnpm install --frozen-lockfile
+          export DATABASE_URL="postgresql://mockuser:mockpass@localhost:5432/mockdb"
+          pnpm prisma generate
+          pnpm run build
+
+  deploy_to_render:
+    needs: test_and_build 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger User Service Deploy
+        run: |
+          curl -f -X POST "${{ secrets.RENDER_USER_SERVICE_DEPLOY_HOOK }}"
+
+      - name: Trigger URL Service Deploy
+        run: |
+          curl -f -X POST "${{ secrets.RENDER_URL_SERVICE_DEPLOY_HOOK }}"
+
+      - name: Trigger API Gateway Deploy
+        run: |
+          curl -f -X POST "${{ secrets.RENDER_GATEWAY_DEPLOY_HOOK }}"
