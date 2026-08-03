@@ -74,8 +74,6 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm run build
 
-      - name: Deploy to Vercel
+      - name: Trigger Vercel Deploy
         run: |
-          echo "Deploying to Vercel pipeline..."
-          # npm install --global vercel
-          # vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
+          curl -f -X POST "${{ secrets.VERCEL_HOOK }}"
