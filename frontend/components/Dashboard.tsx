@@ -78,7 +78,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-            <Link2 className="text-indigo-500 animate-pulse" /> LinkShrink
+            <Link2 className="text-indigo-500 animate-pulse" /> Lily-Link
           </h1>
           <p className="text-sm text-slate-400 mt-1">Lightweight microservices shortener</p>
         </div>

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LinkShrink - Microservices Shortener",
+  title: "Lily Link - Microservices Shortener",
   description: "Sleek and secure URL shortener",
 };
 
