@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import api from "../app/lib/api";
-import { Card, CardHeader, CardDescription, Input, Button } from "@heroui/react";
+import api from "@/app/lib/api";
+import {
+  Card,
+  CardHeader,
+  CardDescription,
+  Input,
+  Button,
+} from "@heroui/react";
 
 interface AuthProps {
   onAuthSuccess: () => void;
@@ -35,8 +41,8 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
         setIsLogin(true);
         setError("Registration complete. Please login now.");
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Something went wrong");
+    } catch {
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -64,9 +70,7 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <Input
-                label="Name"
                 placeholder="John Doe"
-                variant="bordered"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -74,27 +78,22 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
             )}
             <Input
               type="email"
-              label="Email Address"
               placeholder="you@example.com"
-              variant="bordered"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
               type="password"
-              label="Password"
               placeholder="••••••••"
-              variant="bordered"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type="submit"
-              color="primary"
-              className="w-full"
-              isLoading={loading}
+              isPending={loading}
+              className="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold text-white"
             >
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
