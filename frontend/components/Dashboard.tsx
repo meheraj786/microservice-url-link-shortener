@@ -33,8 +33,25 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchUrls = async () => {
+      try {
+        const { data } = await api.get("/my-urls");
+        if (isMounted) {
+          setUrls(data);
+        }
+      } catch (err) {
+        console.error("Error fetching URLs:", err);
+      }
+    };
+
     fetchUrls();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []); 
 
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +65,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       setShortUrlResult(data.shortUrl);
       setOriginalUrl("");
       fetchUrls();
-    } catch (err) {
+    } catch (_err) {
       alert("Could not shorten URL.");
     } finally {
       setLoading(false);
