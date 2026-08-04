@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import api from "@/app/lib/api";
+import api from "@/app/lib/api"; 
 import { Link2, Copy, Check, LogOut } from "lucide-react";
-import { Button, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import { Button, Input } from "@heroui/react"; // Only keeping safe Inputs & Buttons
 
 interface UrlItem {
   id: string;
@@ -22,15 +22,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [loading, setLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [shortUrlResult, setShortUrlResult] = useState<string | null>(null);
-
-  const fetchUrls = async () => {
-    try {
-      const { data } = await api.get("/my-urls");
-      setUrls(data);
-    } catch (err) {
-      console.error("Error fetching URLs:", err);
-    }
-  };
 
   useEffect(() => {
     let isMounted = true;
@@ -64,9 +55,12 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       const { data } = await api.post("/shorten", { originalUrl });
       setShortUrlResult(data.shortUrl);
       setOriginalUrl("");
-      fetchUrls();
+      
+      const { data: updatedUrls } = await api.get("/my-urls");
+      setUrls(updatedUrls);
     } catch (_err) {
       alert("Could not shorten URL.");
+      console.error("Error shortening URL:", _err);
     } finally {
       setLoading(false);
     }
@@ -112,7 +106,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             isPending={loading}
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2 rounded-xl"
           >
-            {!loading && <Link2 size={18} />} Shorten Link
+            Shorten Link
           </Button>
         </form>
 
@@ -139,49 +133,53 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         )}
       </div>
 
-      {/* URLs Listing Table */}
+      {/* URLs Listing Table (REFACTORED TO SEMANTIC HTML) */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
         <h3 className="text-lg font-bold text-white mb-4">My URLs</h3>
         
         {urls.length === 0 ? (
           <p className="text-slate-500 text-center py-8">No links shortened yet.</p>
         ) : (
-          <Table className="bg-slate-950/40">
-            <TableHeader>
-              <TableColumn>Short Link</TableColumn>
-              <TableColumn>Original Link</TableColumn>
-              <TableColumn>Clicks</TableColumn>
-              <TableColumn className="text-right">Action</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {urls.map((item) => {
-                const fullShortUrl = `https://api-gateway-ng5f.onrender.com/${item.shortCode}`;
-                return (
-                  <TableRow key={item.id} className="border-b border-slate-800">
-                    <TableCell className="font-bold text-indigo-400">
-                      <a href={fullShortUrl} target="_blank" rel="noreferrer" className="hover:underline">
-                        /{item.shortCode}
-                      </a>
-                    </TableCell>
-                    <TableCell>
-                      <span className="truncate max-w-[200px] block" title={item.originalUrl}>
-                        {item.originalUrl}
-                      </span>
-                    </TableCell>
-                    <TableCell className="font-semibold text-center">{item.clicks}</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        onClick={() => copyToClipboard(fullShortUrl, item.id)}
-                        className="bg-slate-950 border border-slate-800 rounded-lg text-slate-300 hover:text-white"
-                      >
-                        {copiedCode === item.id ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          <div className="overflow-x-auto bg-slate-950/40 rounded-xl border border-slate-850 p-4">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider font-semibold">
+                  <th className="pb-3 pl-2">Short Link</th>
+                  <th className="pb-3">Original Link</th>
+                  <th className="pb-3 text-center">Clicks</th>
+                  <th className="pb-3 text-right pr-2">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800 text-sm">
+                {urls.map((item) => {
+                  const fullShortUrl = `https://api-gateway-ng5f.onrender.com/${item.shortCode}`;
+                  return (
+                    <tr key={item.id} className="hover:bg-slate-900/30 transition-colors">
+                      <td className="py-4 pl-2 font-bold text-indigo-400">
+                        <a href={fullShortUrl} target="_blank" rel="noreferrer" className="hover:underline">
+                          /{item.shortCode}
+                        </a>
+                      </td>
+                      <td className="py-4">
+                        <span className="truncate max-w-[200px] block text-slate-400" title={item.originalUrl}>
+                          {item.originalUrl}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center font-semibold text-slate-200">{item.clicks}</td>
+                      <td className="py-4 text-right pr-2">
+                        <Button
+                          onClick={() => copyToClipboard(fullShortUrl, item.id)}
+                          className="bg-slate-950 border border-slate-800 rounded-lg text-slate-300 hover:text-white"
+                        >
+                          {copiedCode === item.id ? <Check size={14} className="text-success" /> : <Copy size={14} />}
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
