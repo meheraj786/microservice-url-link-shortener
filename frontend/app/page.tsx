@@ -1,17 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
-import Auth from '../pages/Auth'
-import Dashboard from '../pages/Dashboard'
+"use client";
 
-export const Route = createFileRoute('/')({
-  component: Index,
-})
+import { useState, useEffect } from "react";
+import Auth from "@/components/Auth";
+import Dashboard from "@/components/Dashboard";
 
-function Index() {
+export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check local storage on initial mount
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
@@ -28,14 +24,14 @@ function Index() {
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-slate-950">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen py-10">
+    <main className="min-h-screen py-10 bg-slate-950">
       {isAuthenticated ? (
         <Dashboard onLogout={handleLogout} />
       ) : (
