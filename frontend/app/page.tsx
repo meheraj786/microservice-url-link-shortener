@@ -31,7 +31,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen py-10 bg-slate-950">
+    <main className="min-h-screen  bg-slate-950">
       {isAuthenticated ? (
         <Dashboard onLogout={handleLogout} />
       ) : (
