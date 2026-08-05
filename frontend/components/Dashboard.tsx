@@ -203,7 +203,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                     </a>
                   </div>
                   <Tooltip>
-                    <TooltipTrigger asChild>
+                    <TooltipTrigger>
                       <Button
                         size="icon"
                         variant="outline"
@@ -301,7 +301,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                           </TableCell>
                           <TableCell className="py-4 text-right">
                             <Tooltip>
-                              <TooltipTrigger asChild>
+                              <TooltipTrigger>
                                 <Button
                                   size="icon"
                                   variant="outline"
